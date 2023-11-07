@@ -465,7 +465,7 @@ struct InputView: View {
     var backgroundColor: Color {
         switch style {
         case .message:
-            return theme.colors.mainBackground
+            return theme.colors.inputBackground
         case .signature:
             return pickerTheme.main.albumSelectionBackground
         }

@@ -14,7 +14,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/exyte/FloatingButton",
       "state" : {
-        "revision" : "88963d159b80f4993fc71b42100a08c10849c68e",
+        "revision" : "02de14afa8b9e43a49c7da2d592a4f113b998c03",
         "version" : "1.2.0"
       }
     },
@@ -23,7 +23,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/exyte/MediaPicker.git",
       "state" : {
-        "revision" : "f493425514490b0629725387122d15d2876aeff5",
+        "revision" : "467ba6dd686a88584dea5cc82b3b87cbc9f0aa19",
         "version" : "2.1.1"
       }
     },

@@ -43,6 +43,7 @@ public struct ChatTheme {
         public var grayStatus: Color
         public var errorStatus: Color
 
+        public var inputBackground: Color
         public var inputLightContextBackground: Color
         public var inputDarkContextBackground: Color
 
@@ -63,6 +64,7 @@ public struct ChatTheme {
         public init(
             grayStatus: Color = Color(hex: "AFB3B8"),
             errorStatus: Color = Color.red,
+            inputBackground: Color = .white,
             inputLightContextBackground: Color = Color(hex: "F2F3F5"),
             inputDarkContextBackground: Color = Color(hex: "F2F3F5").opacity(0.12),
             mainBackground: Color = .white,
@@ -78,6 +80,7 @@ public struct ChatTheme {
         ) {
             self.grayStatus = grayStatus
             self.errorStatus = errorStatus
+            self.inputBackground = inputBackground
             self.inputLightContextBackground = inputLightContextBackground
             self.inputDarkContextBackground = inputDarkContextBackground
             self.mainBackground = mainBackground

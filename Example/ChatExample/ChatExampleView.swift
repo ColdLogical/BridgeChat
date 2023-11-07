@@ -12,7 +12,10 @@ struct ChatExampleView: View {
     
     private let title: String
 
-    init(viewModel: ChatExampleViewModel = ChatExampleViewModel(), title: String) {
+    init(
+        viewModel: ChatExampleViewModel = ChatExampleViewModel(),
+        title: String
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.title = title
     }
@@ -71,6 +74,7 @@ struct ChatExampleView: View {
                 fullscreenTint: .white
             )
         )
+        .background(Color.red)
         .onAppear(perform: viewModel.onStart)
         .onDisappear(perform: viewModel.onStop)
     }
@@ -79,4 +83,8 @@ struct ChatExampleView: View {
 extension Color {
     static var exampleBlue = Color(hex: "#4962FF")
     static var examplePickerBg = Color(hex: "1F1F1F")
+}
+
+#Preview {
+    ChatExampleView(title: "Test")
 }
