@@ -12,7 +12,7 @@ struct ChatThemeKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var chatTheme: ChatTheme {
+    public var chatTheme: ChatTheme {
         get { self[ChatThemeKey.self] }
         set { self[ChatThemeKey.self] = newValue }
     }
