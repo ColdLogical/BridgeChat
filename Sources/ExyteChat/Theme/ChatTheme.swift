@@ -114,6 +114,7 @@ public struct ChatTheme {
             public var arrowSend: Image
             public var attach: Image
             public var attachCamera: Image
+            public var messageTime: Image
             public var microphone: Image
         }
 
@@ -192,6 +193,7 @@ public struct ChatTheme {
             arrowSend: Image? = nil,
             attach: Image? = nil,
             attachCamera: Image? = nil,
+            messageTime: Image? = nil,
             microphone: Image? = nil,
             fullscreenPlay: Image? = nil,
             fullscreenPause: Image? = nil,
@@ -247,6 +249,7 @@ public struct ChatTheme {
                 arrowSend: arrowSend ?? Image("arrowSend", bundle: .current),
                 attach: attach ?? Image("attach", bundle: .current),
                 attachCamera: attachCamera ?? Image("attachCamera", bundle: .current),
+                messageTime: messageTime ?? Image("microphone", bundle: .current),
                 microphone: microphone ?? Image("microphone", bundle: .current)
             )
 

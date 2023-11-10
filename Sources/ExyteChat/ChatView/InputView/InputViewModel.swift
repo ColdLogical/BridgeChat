@@ -64,6 +64,9 @@ final class InputViewModel: ObservableObject {
         case .camera:
             mediaPickerMode = .camera
             showPicker = true
+        case .messageTime:
+            // TODO: @cold: implement message time selection
+            break
         case .send:
             send()
         case .recordAudioTap:

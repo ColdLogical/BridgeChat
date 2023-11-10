@@ -26,6 +26,7 @@ public enum InputViewAction {
     case photo
     case add
     case camera
+    case messageTime
     case send
 
     case recordAudioHold
@@ -128,7 +129,8 @@ struct InputView: View {
         } else {
             switch style {
             case .message:
-                attachButton
+                messageTimeButton
+                cameraButton
             case .signature:
                 if viewModel.mediaPickerMode == .cameraSelection {
                     addButton
@@ -150,7 +152,15 @@ struct InputView: View {
             case .isRecordingTap:
                 recordingInProgress
             default:
-                TextInputView(text: $viewModel.attachments.text, inputFieldId: inputFieldId, style: style)
+                HStack {
+                    Text("|")
+                        .foregroundColor(theme.colors.buttonBackground)
+                    TextInputView(
+                        text: $viewModel.attachments.text,
+                        inputFieldId: inputFieldId,
+                        style: style
+                    )
+                }
             }
         }
         .frame(minHeight: 48)
@@ -162,7 +172,8 @@ struct InputView: View {
             switch state {
             case .empty, .waitingForRecordingPermission:
                 if case .message = style {
-                    cameraButton
+                    // Do Nothing
+//                    cameraButton
                 }
             case .isRecordingHold, .isRecordingTap:
                 recordDurationInProcess
@@ -186,12 +197,12 @@ struct InputView: View {
                     .foregroundColor(theme.colors.sendButtonBackground)
             }
             Group {
-                if state.canSend {
+//                if state.canSend {
                     sendButton
-                } else {
-                    recordButton
-                        .highPriorityGesture(dragGesture())
-                }
+//                } else {
+//                    recordButton
+//                        .highPriorityGesture(dragGesture())
+//                }
             }
             .compositingGroup()
             .overlay(alignment: .top) {
@@ -298,6 +309,16 @@ struct InputView: View {
             onAction(.camera)
         } label: {
             theme.images.inputView.attachCamera
+                .viewSize(24)
+                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+        }
+    }
+    
+    var messageTimeButton: some View {
+        Button {
+            onAction(.messageTime)
+        } label: {
+            theme.images.inputView.messageTime
                 .viewSize(24)
                 .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
         }

@@ -5,7 +5,7 @@
 import Foundation
 
 extension URLCache {
-    static let imageCache = URLCache(
+    public static let imageCache = URLCache(
         memoryCapacity: 512.megabytes(),
         diskCapacity: 2.gigabytes()
     )

@@ -23,6 +23,7 @@ struct ChatNavigationModifier: ViewModifier {
                 backButton
                 infoToolbarItem
             }
+            .toolbarBackground(.visible)
     }
     
     private var backButton: some ToolbarContent {
@@ -49,6 +50,14 @@ struct ChatNavigationModifier: ViewModifier {
                     }
                     .frame(width: 35, height: 35)
                     .clipShape(Circle())
+                } else {
+                    let firstCharacter = title.first ?? "?"
+                    VStack(alignment: .center) {
+                        Text(String(firstCharacter))
+                            .frame(width: 54, height: 54)
+                            .foregroundColor(Color.black)
+                            .background(theme.colors.grayStatus, in: Circle())
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -63,6 +72,14 @@ struct ChatNavigationModifier: ViewModifier {
                     }
                 }
                 Spacer()
+                Button(
+                    action: {
+                        
+                    },
+                    label: {
+                        Image("Call")
+                    }
+                )
             }
             .padding(.leading, 10)
         }
