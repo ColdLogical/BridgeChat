@@ -31,6 +31,7 @@ struct ChatNavigationModifier: ViewModifier {
             Button { presentationMode.wrappedValue.dismiss() } label: {
                 theme.images.backButton
             }
+            .padding(.top, 50)
         }
     }
     
@@ -82,6 +83,7 @@ struct ChatNavigationModifier: ViewModifier {
                 )
             }
             .padding(.leading, 10)
+            .padding(.top, 50)
         }
     }
     
