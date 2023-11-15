@@ -15,6 +15,7 @@ struct ChatNavigationModifier: ViewModifier {
     let title: String
     let status: String?
     let cover: URL?
+    let callHandler: (() -> Void)?
     
     func body(content: Content) -> some View {
         content
@@ -75,7 +76,7 @@ struct ChatNavigationModifier: ViewModifier {
                 Spacer()
                 Button(
                     action: {
-                        
+                        callHandler?()
                     },
                     label: {
                         Image("Call")
