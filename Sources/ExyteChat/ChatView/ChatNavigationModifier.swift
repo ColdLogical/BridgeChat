@@ -15,6 +15,7 @@ struct ChatNavigationModifier: ViewModifier {
     let title: String
     let status: String?
     let cover: URL?
+    let backHandler: (() -> Void)?
     let callHandler: (() -> Void)?
     
     func body(content: Content) -> some View {
@@ -29,7 +30,10 @@ struct ChatNavigationModifier: ViewModifier {
     
     private var backButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Button { presentationMode.wrappedValue.dismiss() } label: {
+            Button {
+                presentationMode.wrappedValue.dismiss()
+                backHandler?()
+            } label: {
                 theme.images.backButton
             }
             .padding(.top, 50)
