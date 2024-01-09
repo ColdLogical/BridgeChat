@@ -423,6 +423,12 @@ public extension ChatView {
         view.chatTitle = title
         return view.modifier(ChatNavigationModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler))
     }
+    
+    func chatTitleBar(title: String, status: String? = nil, cover: URL? = nil, callHandler: (() -> Void)? = nil, backHandler: (() -> Void)? = nil) -> some View {
+        var view = self
+        view.chatTitle = title
+        return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler))
+    }
 }
 
 public extension ChatView where MessageContent == EmptyView {
