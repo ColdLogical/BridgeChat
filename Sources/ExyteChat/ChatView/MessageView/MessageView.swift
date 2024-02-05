@@ -158,9 +158,50 @@ struct MessageView: View {
         .frame(width: message.attachments.isEmpty ? nil : MessageView.widthWithMedia + additionalMediaInset)
         .bubbleBackground(message, theme: theme, isReply: true)
     }
-
+    
     @ViewBuilder
     var avatarView: some View {
+        
+        ZStack(alignment: .bottomTrailing) {
+            Group {
+                
+                if let avatarURL = message.user.avatarURL{
+                    
+                    AvatarView(url: avatarURL, avatarSize: avatarSize)
+                        .contentShape(Circle())
+                        .onTapGesture {
+                            tapAvatarClosure?(message.user, message.id)
+                        }
+                }
+                
+                else{
+                    
+                    let firstCharacter = message.user.name.first ?? "?"
+                    VStack(alignment: .center) {
+                        Text(String(firstCharacter))
+                            .frame(width: avatarSize, height: avatarSize)
+                            .foregroundColor(Color.black)
+                            .background(theme.colors.grayStatus, in: Circle())
+                    }
+                }
+            }
+            .padding(.horizontal, MessageView.horizontalAvatarPadding)
+            .sizeGetter($avatarViewSize)
+            
+            if #available(iOS 17.0, *){
+                
+//                Circle()
+//                    .fill(status == "Online" ? Color.init(hex: "#81D8D0") : Color.init(hex: "#AFAFAF"))
+//                    .stroke(Color.white, lineWidth: 1)
+//                    .frame(width: 14, height: 14)
+            }
+        }
+        
+    }
+
+
+    @ViewBuilder
+    var avatarView2: some View {
         Group {
             if showAvatar {
                 AvatarView(url: message.user.avatarURL, avatarSize: avatarSize)

@@ -37,28 +37,41 @@ struct ChatTitleBarModifier: ViewModifier {
     
     private var infoToolbarItem: some View {
         HStack {
-            if let url = cover {
-                CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    default:
-                        Rectangle().fill(theme.colors.grayStatus)
+            
+            ZStack(alignment: .bottomTrailing) {
+                
+                if let url = cover {
+                    CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        default:
+                            Rectangle().fill(theme.colors.grayStatus)
+                        }
+                    }
+                    .frame(width: 35, height: 35)
+                    .clipShape(Circle())
+                } else {
+                    let firstCharacter = title.first ?? "?"
+                    VStack(alignment: .center) {
+                        Text(String(firstCharacter))
+                            .frame(width: 54, height: 54)
+                            .foregroundColor(Color.black)
+                            .background(theme.colors.grayStatus, in: Circle())
                     }
                 }
-                .frame(width: 35, height: 35)
-                .clipShape(Circle())
-            } else {
-                let firstCharacter = title.first ?? "?"
-                VStack(alignment: .center) {
-                    Text(String(firstCharacter))
-                        .frame(width: 54, height: 54)
-                        .foregroundColor(Color.black)
-                        .background(theme.colors.grayStatus, in: Circle())
+                
+                if #available(iOS 17.0, *){
+                    
+                    Circle()
+                        .fill(status == "Online" ? Color.init(hex: "#81D8D0") : Color.init(hex: "#AFAFAF"))
+                        .stroke(Color.white, lineWidth: 1)
+                        .frame(width: 14, height: 14)
                 }
             }
+            
             
             VStack(alignment: .leading, spacing: 0) {
                 Text(title)
