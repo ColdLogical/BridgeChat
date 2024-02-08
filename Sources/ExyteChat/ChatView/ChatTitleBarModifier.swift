@@ -10,12 +10,15 @@ struct ChatTitleBarModifier: ViewModifier {
     let cover: URL?
     let backHandler: (() -> Void)?
     let callHandler: (() -> Void)?
+    let profileHandler: (() -> Void)?
     
     func body(content: Content) -> some View {
         VStack {
             HStack {
                 backButton
-                infoToolbarItem
+                infoToolbarItem.onTapGesture(perform: {
+                    profileHandler?()
+                })
             }
             content
         }
