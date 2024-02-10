@@ -31,11 +31,12 @@ struct AttachmentsEditor<InputViewContent: View>: View {
     @State private var currentFullscreenMedia: Media?
 
     var showingAlbums: Bool {
-        inputViewModel.mediaPickerMode == .albums
+        inputViewModel.mediaPickerMode == .camera
     }
 
     var body: some View {
         ZStack {
+            
             mediaPicker
 
             if inputViewModel.showActivityIndicator {
@@ -43,13 +44,39 @@ struct AttachmentsEditor<InputViewContent: View>: View {
             }
         }
     }
-
+    
     var mediaPicker: some View {
+        GeometryReader { g in
+            
+            MediaPicker(
+                isPresented: $inputViewModel.showPicker,
+                onChange: {
+                    let selectedMedia = $0
+                    print(selectedMedia)
+                },
+                cameraViewBuilder: { cameraSheetView, cancelClosure, showPreviewClosure, takePhotoClosure, startVideoCaptureClosure, stopVideoCaptureClosure, toggleFlash, flipCamera in cameraSheetView
+                    
+                        .overlay(alignment: .bottom) {
+                            HStack {
+                                Button("Take photo") { takePhotoClosure() }
+                            }
+                            .padding(.bottom, 20)
+                        }
+                }
+            )
+            .showLiveCameraCell()
+            .mediaSelectionLimit(1)
+            .pickerMode($inputViewModel.mediaPickerMode)
+        }
+    }
+
+    var mediaPicker_old: some View {
         GeometryReader { g in
             MediaPicker(isPresented: $inputViewModel.showPicker) {
                 seletedMedias = $0
                 assembleSelectedMedia()
-            } albumSelectionBuilder: { _, albumSelectionView, _ in
+            } 
+        albumSelectionBuilder: { _, albumSelectionView, _ in
                 VStack {
                     albumSelectionHeaderView
                         .padding(.top, g.safeAreaInsets.top)
@@ -60,7 +87,8 @@ struct AttachmentsEditor<InputViewContent: View>: View {
                 }
                 .background(pickerTheme.main.albumSelectionBackground)
                 .ignoresSafeArea()
-            } cameraSelectionBuilder: { _, cancelClosure, cameraSelectionView in
+            } 
+        cameraSelectionBuilder: { _, cancelClosure, cameraSelectionView in
                 VStack {
                     cameraSelectionHeaderView(cancelClosure: cancelClosure)
                         .padding(.top, g.safeAreaInsets.top)

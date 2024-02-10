@@ -12,7 +12,7 @@ final class InputViewModel: ObservableObject {
     @Published var state: InputViewState = .empty
 
     @Published var showPicker = false
-    @Published var mediaPickerMode = MediaPickerMode.photos
+    @Published var mediaPickerMode = MediaPickerMode.camera
 
     @Published var showActivityIndicator = false
 

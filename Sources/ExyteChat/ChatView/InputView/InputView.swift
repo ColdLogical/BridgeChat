@@ -97,7 +97,7 @@ struct InputView: View {
     @State private var cancelGesture = false
     @State private var showCamera = false
     @State private var currentFullscreenMedia: Media?
-    @State private var mediaPickerMode = MediaPickerMode.camera
+    @State private var mediaPickerMode = MediaPickerMode.cameraSelection
     
     let tapDelay = 0.2
     
@@ -311,49 +311,50 @@ struct InputView: View {
     var cameraButton: some View {
         
         
-        //        Button {
-        //            onAction(.camera)
-        //        } label: {
-        //            theme.images.inputView.attachCamera
-        //                .viewSize(24)
-        //                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-        //        }
-        
         Button {
-            
-            self.showCamera = true
+            onAction(.camera)
+        } label: {
+            theme.images.inputView.attachCamera
+                .viewSize(24)
+                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
         }
-    label:{
-        theme.images.inputView.attachCamera
-            .viewSize(24)
-            .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-    }
-    .sheet(isPresented: $showCamera, onDismiss: {
         
-        print("camera dismissed")
-    }) {
         
-        MediaPicker(
-            isPresented: $showCamera,
-            onChange: {
-                let selectedMedia = $0
-                print(selectedMedia)
-            },
-            cameraViewBuilder: { cameraSheetView, cancelClosure, showPreviewClosure, takePhotoClosure, startVideoCaptureClosure, stopVideoCaptureClosure, toggleFlash, flipCamera in cameraSheetView
-                
-                    .overlay(alignment: .bottom) {
-                        HStack {
-                            Button("Take photo") { takePhotoClosure() }
-                        }
-                        .padding(.bottom, 20)
-                    }
-            }
-        )
-        .showLiveCameraCell()
-        .mediaSelectionLimit(1)
-        .pickerMode($mediaPickerMode)
-        .currentFullscreenMedia($currentFullscreenMedia)
-    }
+//        Button {
+//            
+//            self.showCamera = true
+//        }
+//    label:{
+//        theme.images.inputView.attachCamera
+//            .viewSize(24)
+//            .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+//    }
+//    .sheet(isPresented: $showCamera, onDismiss: {
+//        
+//        print("camera dismissed")
+//    }) {
+//        
+//        MediaPicker(
+//            isPresented: $showCamera,
+//            onChange: {
+//                let selectedMedia = $0
+//                print(selectedMedia)
+//            },
+//            cameraViewBuilder: { cameraSheetView, cancelClosure, showPreviewClosure, takePhotoClosure, startVideoCaptureClosure, stopVideoCaptureClosure, toggleFlash, flipCamera in cameraSheetView
+//                
+//                    .overlay(alignment: .bottom) {
+//                        HStack {
+//                            Button("Take photo") { takePhotoClosure() }
+//                        }
+//                        .padding(.bottom, 20)
+//                    }
+//            }
+//        )
+//        .showLiveCameraCell()
+//        .mediaSelectionLimit(1)
+//        .pickerMode($mediaPickerMode)
+//        //        .currentFullscreenMedia($currentFullscreenMedia)
+//    }
     }
     
     var messageTimeButton: some View {
