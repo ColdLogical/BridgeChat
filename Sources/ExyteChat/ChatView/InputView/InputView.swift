@@ -66,6 +66,57 @@ public struct InputViewAttachments {
     public var replyMessage: ReplyMessage?
 }
 
+struct ImagePicker: UIViewControllerRepresentable {
+    var sourceType: UIImagePickerController.SourceType = .camera
+    @Binding var selectedImage: UIImage?
+    @Binding var selectedVideoURL: URL?
+    @Environment(\.presentationMode) private var presentationMode
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = sourceType
+        imagePicker.mediaTypes = ["public.image", "public.movie"] // Allow both photo and video
+        imagePicker.videoQuality = .typeHigh // Set video quality
+        imagePicker.delegate = context.coordinator
+        
+        // For iOS 13+, to ensure full screen presentation
+        if #available(iOS 13.0, *) {
+            imagePicker.modalPresentationStyle = .fullScreen
+        }
+        
+        return imagePicker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: ImagePicker
+        
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.selectedImage = image
+            } else if let videoURL = info[.mediaURL] as? URL {
+                parent.selectedVideoURL = videoURL
+            }
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+    }
+}
+
 struct InputView: View {
     
     @Environment(\.chatTheme) private var theme
@@ -308,53 +359,32 @@ struct InputView: View {
         }
     }
     
+    @State private var showImagePicker: Bool = false
+    @State private var image: UIImage?
+    @State private var videoURL: URL?
+    
     var cameraButton: some View {
         
+        //        Button {
+        //            onAction(.camera)
+        //        } label: {
+        //            theme.images.inputView.attachCamera
+        //                .viewSize(24)
+        //                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+        //        }
         
         Button {
-            onAction(.camera)
+            
+            self.showImagePicker = true
+            
         } label: {
             theme.images.inputView.attachCamera
                 .viewSize(24)
                 .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
         }
-        
-        
-//        Button {
-//            
-//            self.showCamera = true
-//        }
-//    label:{
-//        theme.images.inputView.attachCamera
-//            .viewSize(24)
-//            .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-//    }
-//    .sheet(isPresented: $showCamera, onDismiss: {
-//        
-//        print("camera dismissed")
-//    }) {
-//        
-//        MediaPicker(
-//            isPresented: $showCamera,
-//            onChange: {
-//                let selectedMedia = $0
-//                print(selectedMedia)
-//            },
-//            cameraViewBuilder: { cameraSheetView, cancelClosure, showPreviewClosure, takePhotoClosure, startVideoCaptureClosure, stopVideoCaptureClosure, toggleFlash, flipCamera in cameraSheetView
-//                
-//                    .overlay(alignment: .bottom) {
-//                        HStack {
-//                            Button("Take photo") { takePhotoClosure() }
-//                        }
-//                        .padding(.bottom, 20)
-//                    }
-//            }
-//        )
-//        .showLiveCameraCell()
-//        .mediaSelectionLimit(1)
-//        .pickerMode($mediaPickerMode)
-//        //        .currentFullscreenMedia($currentFullscreenMedia)
-//    }
+        .fullScreenCover(isPresented: $showImagePicker) {
+            ImagePicker(sourceType: .camera, selectedImage: self.$image, selectedVideoURL: self.$videoURL)
+        }
     }
     
     var messageTimeButton: some View {
