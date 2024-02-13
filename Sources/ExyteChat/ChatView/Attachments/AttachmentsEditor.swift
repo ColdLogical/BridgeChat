@@ -45,7 +45,7 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         }
     }
     
-    var mediaPicker: some View {
+    var mediaPicker_new: some View {
         GeometryReader { g in
             
             MediaPicker(
@@ -70,7 +70,7 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         }
     }
 
-    var mediaPicker_old: some View {
+    var mediaPicker: some View {
         GeometryReader { g in
             MediaPicker(isPresented: $inputViewModel.showPicker) {
                 seletedMedias = $0

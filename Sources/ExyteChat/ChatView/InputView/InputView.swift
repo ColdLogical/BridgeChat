@@ -365,26 +365,26 @@ struct InputView: View {
     
     var cameraButton: some View {
         
-        //        Button {
-        //            onAction(.camera)
-        //        } label: {
-        //            theme.images.inputView.attachCamera
-        //                .viewSize(24)
-        //                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-        //        }
+                Button {
+                    onAction(.camera)
+                } label: {
+                    theme.images.inputView.attachCamera
+                        .viewSize(24)
+                        .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+                }
         
-        Button {
-            
-            self.showImagePicker = true
-            
-        } label: {
-            theme.images.inputView.attachCamera
-                .viewSize(24)
-                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-        }
-        .fullScreenCover(isPresented: $showImagePicker) {
-            ImagePicker(sourceType: .camera, selectedImage: self.$image, selectedVideoURL: self.$videoURL)
-        }
+//        Button {
+//            
+//            self.showImagePicker = true
+//            
+//        } label: {
+//            theme.images.inputView.attachCamera
+//                .viewSize(24)
+//                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+//        }
+//        .fullScreenCover(isPresented: $showImagePicker) {
+//            ImagePicker(sourceType: .camera, selectedImage: self.$image, selectedVideoURL: self.$videoURL)
+//        }
     }
     
     var messageTimeButton: some View {
