@@ -359,19 +359,19 @@ struct InputView: View {
         }
     }
     
-    @State private var showImagePicker: Bool = false
     @State private var image: UIImage?
     @State private var videoURL: URL?
+    @State private var showDeleteTimer: Bool = false
     
     var cameraButton: some View {
         
-                Button {
-                    onAction(.camera)
-                } label: {
-                    theme.images.inputView.attachCamera
-                        .viewSize(24)
-                        .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
-                }
+        Button {
+            onAction(.camera)
+        } label: {
+            theme.images.inputView.attachCamera
+                .viewSize(24)
+                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+        }
         
 //        Button {
 //            

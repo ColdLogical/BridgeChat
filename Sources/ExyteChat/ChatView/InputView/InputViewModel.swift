@@ -66,6 +66,8 @@ final class InputViewModel: ObservableObject {
             showPicker = true
         case .messageTime:
             // TODO: @cold: implement message time selection
+            
+            showTimerAlert()
             break
         case .send:
             send()
@@ -97,6 +99,11 @@ final class InputViewModel: ObservableObject {
             state = .pausedRecording
             recordingPlayer?.pause()
         }
+    }
+    
+    func showTimerAlert(){
+        
+        DeletePopup().showAndStack()
     }
 
     func recordAudio() {
