@@ -11,6 +11,7 @@ final class ChatViewModel: ObservableObject {
     
     @Published private(set) var fullscreenAttachmentItem: Optional<Attachment> = nil
     @Published var fullscreenAttachmentPresented = false
+    @Published var showDeleteTimerPopup = false
 
     @Published var messageMenuRow: MessageRow?
 

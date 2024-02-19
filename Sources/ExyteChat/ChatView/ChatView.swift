@@ -10,6 +10,10 @@ import FloatingButton
 import Introspect
 import ExyteMediaPicker
 
+extension Notification.Name {
+    static let showDeletionTimer = Notification.Name("showDeletionTimer")
+}
+
 public typealias MediaPickerParameters = SelectionParamsHolder
 
 public struct ChatView<MessageContent: View, InputViewContent: View>: View {
@@ -161,6 +165,13 @@ public struct ChatView<MessageContent: View, InputViewContent: View>: View {
                 globalFocusState.focus = nil
             }
         }
+        .onReceive(inputViewModel.$showDeleteTimerPopup, perform: { _ in
+            
+            viewModel.showDeleteTimerPopup = true
+            print("show delete popup")
+            NotificationCenter.default.post(name: .showDeletionTimer, object: nil)
+
+        })
         .environmentObject(keyboardState)
     }
 

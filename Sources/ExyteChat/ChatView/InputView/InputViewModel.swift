@@ -15,6 +15,7 @@ final class InputViewModel: ObservableObject {
     @Published var mediaPickerMode = MediaPickerMode.camera
 
     @Published var showActivityIndicator = false
+    @Published var showDeleteTimerPopup = false
 
     var recordingPlayer: RecordingPlayer?
     var didSendMessage: ((DraftMessage) -> Void)?
@@ -67,7 +68,8 @@ final class InputViewModel: ObservableObject {
         case .messageTime:
             // TODO: @cold: implement message time selection
             
-            showTimerAlert()
+            self.showDeleteTimerPopup = true
+//            showTimerAlert()
             break
         case .send:
             send()
@@ -103,7 +105,10 @@ final class InputViewModel: ObservableObject {
     
     func showTimerAlert(){
         
-        DeletePopup().showAndStack()
+//        self.showDeleteTimerPopup = true
+        
+//        viewmodel
+//        DeletePopup().showAndStack()
     }
 
     func recordAudio() {
