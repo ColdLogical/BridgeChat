@@ -168,7 +168,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View>: View {
         .onReceive(inputViewModel.$showDeleteTimerPopup, perform: { _ in
             
             viewModel.showDeleteTimerPopup = true
-            print("show delete popup")
+//            print("show delete popup")
             NotificationCenter.default.post(name: .showDeletionTimer, object: nil)
 
         })
