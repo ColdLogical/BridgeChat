@@ -8,18 +8,46 @@ struct AvatarView: View {
 
     let url: URL?
     let avatarSize: CGFloat
-
+    var displayAvatar: UIImage?
+    
     var body: some View {
-        CachedAsyncImage(url: url, urlCache: .imageCache) { image in
-            image
-                .resizable()
-                .scaledToFill()
-        } placeholder: {
-            Rectangle().fill(Color.gray)
-        }
-        .viewSize(avatarSize)
-        .clipShape(Circle())
+        
+            
+            if let image = self.displayAvatar{
+                
+                let image2: Image = Image(uiImage: image)
+                
+                image2
+                    .resizable()
+                    .scaledToFill()
+                    .viewSize(avatarSize)
+//                    .frame(width: 54, height: 54)
+                    .clipShape(Circle())
+            }
+            
+//            else{
+//                let firstCharacter = group.displayName.first ?? "?"
+//                VStack(alignment: .center) {
+//                    Text(String(firstCharacter))
+//                        .frame(width: 54, height: 54)
+//                        .foregroundColor(Color.black)
+//                        .background(Color.imageBackground, in: Circle())
+//                }
+//            }
+        
     }
+
+//    var body: some View {
+//        CachedAsyncImage(url: url, urlCache: .imageCache) { image in
+//            image
+//                .resizable()
+//                .scaledToFill()
+//        } placeholder: {
+//            Rectangle().fill(Color.gray)
+//        }
+//        .viewSize(avatarSize)
+//        .clipShape(Circle())
+//    }
 }
 
 struct AvatarView_Previews: PreviewProvider {

@@ -162,21 +162,20 @@ struct MessageView: View {
     @ViewBuilder
     var avatarView: some View {
         
-        ZStack(alignment: .bottomTrailing) {
+//        ZStack(alignment: .bottomTrailing) {
             Group {
                 
-                if let avatarURL = message.user.avatarURL{
+                let user = message.user
+                
+                if let avatarImageData = user.avatarImageData{
                     
-                    AvatarView(url: avatarURL, avatarSize: avatarSize)
-                        .contentShape(Circle())
-                        .onTapGesture {
-                            tapAvatarClosure?(message.user, message.id)
-                        }
+                    AvatarView(url: nil, avatarSize: avatarSize, displayAvatar: UIImage(data: avatarImageData))
                 }
                 
                 else{
                     
-                    let firstCharacter = message.user.name.first ?? "?"
+                    let firstCharacter = user.name.first ?? "?"
+                    
                     VStack(alignment: .center) {
                         Text(String(firstCharacter))
                             .frame(width: avatarSize, height: avatarSize)
@@ -184,6 +183,27 @@ struct MessageView: View {
                             .background(theme.colors.grayStatus, in: Circle())
                     }
                 }
+                
+//                if let avatarURL = user.avatarURL{
+//                    
+//                    AvatarView(url: avatarURL, avatarSize: avatarSize)
+//                        .contentShape(Circle())
+//                        .onTapGesture {
+//                            tapAvatarClosure?(message.user, message.id)
+//                        }
+//                }
+//                
+//                else{
+//                    
+//                    let firstCharacter = user.name.first ?? "?"
+//                    
+//                    VStack(alignment: .center) {
+//                        Text(String(firstCharacter))
+//                            .frame(width: avatarSize, height: avatarSize)
+//                            .foregroundColor(Color.black)
+//                            .background(theme.colors.grayStatus, in: Circle())
+//                    }
+//                }
             }
             .padding(.horizontal, MessageView.horizontalAvatarPadding)
             .sizeGetter($avatarViewSize)
@@ -195,7 +215,7 @@ struct MessageView: View {
 //                    .stroke(Color.white, lineWidth: 1)
 //                    .frame(width: 14, height: 14)
             }
-        }
+//        }
         
     }
 
@@ -322,8 +342,8 @@ extension View {
 
 #if DEBUG
 struct MessageView_Preview: PreviewProvider {
-    static let stan = User(id: "stan", name: "Stan", avatarURL: nil, isCurrentUser: false)
-    static let john = User(id: "john", name: "John", avatarURL: nil, isCurrentUser: true)
+    static let stan = User(id: "stan", name: "Stan", avatarURL: nil, isCurrentUser: false, avatarImageData: nil)
+    static let john = User(id: "john", name: "John", avatarURL: nil, isCurrentUser: true, avatarImageData: nil)
 
     static private var shortMessage = "Hi, buddy!"
     static private var longMessage = "Hello hello hello hello hello hello hello hello hello hello hello hello hello\n hello hello hello hello d d d d d d d d"

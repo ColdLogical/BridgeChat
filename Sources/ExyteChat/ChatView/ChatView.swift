@@ -435,12 +435,12 @@ public extension ChatView {
         return view.modifier(ChatNavigationModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler))
     }
     
-    func chatTitleBar(title: String, status: String? = nil, cover: URL? = nil, callHandler: (() -> Void)? = nil, backHandler: (() -> Void)? = nil, profileHandler: (() -> Void)? = nil) -> some View {
+    func chatTitleBar(title: String, status: String? = nil, cover: URL? = nil, avatarData: Data? = nil, callHandler: (() -> Void)? = nil, backHandler: (() -> Void)? = nil, profileHandler: (() -> Void)? = nil) -> some View {
         var view = self
         view.chatTitle = title
 //        return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler, profileHandler: profileHandler))
         
-        return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler, profileHandler: profileHandler))
+        return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, avatarData: avatarData, backHandler: backHandler, callHandler: callHandler, profileHandler: profileHandler))
     }
 }
 

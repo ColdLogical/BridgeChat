@@ -8,6 +8,7 @@ struct ChatTitleBarModifier: ViewModifier {
     let title: String
     let status: String?
     let cover: URL?
+    let avatarData: Data?
     let backHandler: (() -> Void)?
     let callHandler: (() -> Void)?
     let profileHandler: (() -> Void)?
@@ -43,28 +44,49 @@ struct ChatTitleBarModifier: ViewModifier {
             
             ZStack(alignment: .bottomTrailing) {
                 
-                if let url = cover {
-                    CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        default:
-                            Rectangle().fill(theme.colors.grayStatus)
-                        }
-                    }
-                    .frame(width: 35, height: 35)
-                    .clipShape(Circle())
+                
+                if let data = self.avatarData {
+                    
+                    Image(uiImage: UIImage(data: data)!)
+                    
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 54, height: 54)
+                        .clipShape(Circle())
+                    
                 } else {
                     let firstCharacter = title.first ?? "?"
                     VStack(alignment: .center) {
                         Text(String(firstCharacter))
                             .frame(width: 54, height: 54)
-                            .foregroundColor(Color.black)
                             .background(theme.colors.grayStatus, in: Circle())
                     }
                 }
+                
+                
+                
+//                if let url = cover {
+//                    CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
+//                        switch phase {
+//                        case .success(let image):
+//                            image
+//                                .resizable()
+//                                .scaledToFill()
+//                        default:
+//                            Rectangle().fill(theme.colors.grayStatus)
+//                        }
+//                    }
+//                    .frame(width: 35, height: 35)
+//                    .clipShape(Circle())
+//                } else {
+//                    let firstCharacter = title.first ?? "?"
+//                    VStack(alignment: .center) {
+//                        Text(String(firstCharacter))
+//                            .frame(width: 54, height: 54)
+//                            .foregroundColor(Color.black)
+//                            .background(theme.colors.grayStatus, in: Circle())
+//                    }
+//                }
                 
                 if #available(iOS 17.0, *){
                     
