@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct MessageView: View {
-
+    
     @Environment(\.chatTheme) private var theme
-
+    
     @ObservedObject var viewModel: ChatViewModel
-
+    
     let message: Message
     let positionInGroup: PositionInGroup
     let avatarSize: CGFloat
     let tapAvatarClosure: ChatView.TapAvatarClosure?
     let messageUseMarkdown: Bool
     let isDisplayingMessageMenu: Bool
-
+    
     @State var avatarViewSize: CGSize = .zero
     @State var statusSize: CGSize = .zero
     @State var timeSize: CGSize = .zero
-
+    
     static let widthWithMedia: CGFloat = 204
     static let horizontalAvatarPadding: CGFloat = 8
     static let horizontalTextPadding: CGFloat = 12
@@ -31,17 +31,17 @@ struct MessageView: View {
     static let statusViewSize: CGFloat = 14
     static let horizontalStatusPadding: CGFloat = 8
     static let horizontalBubblePadding: CGFloat = 70
-
+    
     let font = UIFont.systemFont(ofSize: 15)
-
+    
     enum DateArrangment {
         case hstack, vstack, overlay
     }
-
+    
     var additionalMediaInset: CGFloat {
         message.attachments.count > 1 ? MessageView.horizontalAttachmentPadding * 2 : 0
     }
-
+    
     var dateArrangment: DateArrangment {
         let timeWidth = timeSize.width + 10
         let textPaddings = MessageView.horizontalTextPadding * 2
@@ -50,12 +50,12 @@ struct MessageView: View {
         - statusSize.width
         - MessageView.horizontalBubblePadding
         - textPaddings
-
+        
         let maxWidth = message.attachments.isEmpty ? widthWithoutMedia : MessageView.widthWithMedia - textPaddings
         let finalWidth = message.text.width(withConstrainedWidth: maxWidth, font: font, messageUseMarkdown: messageUseMarkdown)
         let lastLineWidth = message.text.lastLineWidth(labelWidth: maxWidth, font: font, messageUseMarkdown: messageUseMarkdown)
         let numberOfLines = message.text.numberOfLines(labelWidth: maxWidth, font: font, messageUseMarkdown: messageUseMarkdown)
-
+        
         if numberOfLines == 1, finalWidth + CGFloat(timeWidth) < maxWidth {
             return .hstack
         }
@@ -64,21 +64,21 @@ struct MessageView: View {
         }
         return .vstack
     }
-
+    
     var showAvatar: Bool {
         positionInGroup == .single || positionInGroup == .last
     }
-
+    
     var topPadding: CGFloat {
         positionInGroup == .first || positionInGroup == .single ? 8 : 4
     }
-
+    
     var body: some View {
         HStack(alignment: .bottom, spacing: 0) {
             if !message.user.isCurrentUser {
                 avatarView
             }
-
+            
             VStack(alignment: message.user.isCurrentUser ? .trailing : .leading, spacing: 2) {
                 if !isDisplayingMessageMenu, let reply = message.replyMessage?.toMessage() {
                     replyBubbleView(reply)
@@ -92,7 +92,7 @@ struct MessageView: View {
                 }
                 bubbleView(message)
             }
-
+            
             if message.user.isCurrentUser, let status = message.status {
                 MessageStatusView(status: status) {
                     if case let .error(draft) = status {
@@ -106,19 +106,19 @@ struct MessageView: View {
         .padding(message.user.isCurrentUser ? .leading : .trailing, MessageView.horizontalBubblePadding)
         .frame(maxWidth: UIScreen.main.bounds.width, alignment: message.user.isCurrentUser ? .trailing : .leading)
     }
-
+    
     @ViewBuilder
     func bubbleView(_ message: Message) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             if !message.attachments.isEmpty {
                 attachmentsView(message)
             }
-
+            
             if !message.text.isEmpty {
                 textWithTimeView(message)
                     .font(Font(font))
             }
-
+            
             if let recording = message.recording {
                 VStack(alignment: .trailing, spacing: 8) {
                     recordingView(recording)
@@ -130,25 +130,25 @@ struct MessageView: View {
         }
         .bubbleBackground(message, theme: theme)
     }
-
+    
     @ViewBuilder
     func replyBubbleView(_ message: Message) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(message.user.name)
                 .fontWeight(.semibold)
                 .padding(.horizontal, MessageView.horizontalTextPadding)
-
+            
             if !message.attachments.isEmpty {
                 attachmentsView(message)
                     .padding(.top, 4)
                     .padding(.bottom, message.text.isEmpty ? 0 : 4)
             }
-
+            
             if !message.text.isEmpty {
                 MessageTextView(text: message.text, messageUseMarkdown: messageUseMarkdown)
                     .padding(.horizontal, MessageView.horizontalTextPadding)
             }
-
+            
             if let recording = message.recording {
                 recordingView(recording)
             }
@@ -162,64 +162,32 @@ struct MessageView: View {
     @ViewBuilder
     var avatarView: some View {
         
-//        ZStack(alignment: .bottomTrailing) {
-            Group {
-                
-                let user = message.user
-                
-                if let avatarImageData = user.avatarImageData{
-                    
-                    AvatarView(url: nil, avatarSize: avatarSize, displayAvatar: UIImage(data: avatarImageData))
-                }
-                
-                else{
-                    
-                    let firstCharacter = user.name.first ?? "?"
-                    
-                    VStack(alignment: .center) {
-                        Text(String(firstCharacter))
-                            .frame(width: avatarSize, height: avatarSize)
-                            .foregroundColor(Color.black)
-                            .background(theme.colors.grayStatus, in: Circle())
-                    }
-                }
-                
-//                if let avatarURL = user.avatarURL{
-//                    
-//                    AvatarView(url: avatarURL, avatarSize: avatarSize)
-//                        .contentShape(Circle())
-//                        .onTapGesture {
-//                            tapAvatarClosure?(message.user, message.id)
-//                        }
-//                }
-//                
-//                else{
-//                    
-//                    let firstCharacter = user.name.first ?? "?"
-//                    
-//                    VStack(alignment: .center) {
-//                        Text(String(firstCharacter))
-//                            .frame(width: avatarSize, height: avatarSize)
-//                            .foregroundColor(Color.black)
-//                            .background(theme.colors.grayStatus, in: Circle())
-//                    }
-//                }
-            }
-            .padding(.horizontal, MessageView.horizontalAvatarPadding)
-            .sizeGetter($avatarViewSize)
+        Group {
             
-            if #available(iOS 17.0, *){
+            let user = message.user
+            
+            if let avatarImageData = user.avatarImageData{
                 
-//                Circle()
-//                    .fill(status == "Online" ? Color.init(hex: "#81D8D0") : Color.init(hex: "#AFAFAF"))
-//                    .stroke(Color.white, lineWidth: 1)
-//                    .frame(width: 14, height: 14)
+                AvatarView(url: nil, avatarSize: avatarSize, displayAvatar: UIImage(data: avatarImageData))
             }
-//        }
-        
+            
+            else{
+                
+                let firstCharacter = user.name.first ?? "?"
+                
+                VStack(alignment: .center) {
+                    Text(String(firstCharacter))
+                        .frame(width: avatarSize, height: avatarSize)
+                        .foregroundColor(Color.black)
+                        .background(theme.colors.grayStatus, in: Circle())
+                }
+            }
+        }
+        .padding(.horizontal, MessageView.horizontalAvatarPadding)
+        .sizeGetter($avatarViewSize)
     }
-
-
+    
+    
     @ViewBuilder
     var avatarView2: some View {
         Group {
@@ -236,7 +204,7 @@ struct MessageView: View {
         .padding(.horizontal, MessageView.horizontalAvatarPadding)
         .sizeGetter($avatarViewSize)
     }
-
+    
     @ViewBuilder
     func attachmentsView(_ message: Message) -> some View {
         AttachmentsGrid(attachments: message.attachments) {
@@ -255,16 +223,16 @@ struct MessageView: View {
         }
         .contentShape(Rectangle())
     }
-
+    
     @ViewBuilder
     func textWithTimeView(_ message: Message) -> some View {
         let messageView = MessageTextView(text: message.text, messageUseMarkdown: messageUseMarkdown)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, MessageView.horizontalTextPadding)
-
+        
         let timeView = messageTimeView()
             .padding(.trailing, 12)
-
+        
         Group {
             switch dateArrangment {
             case .hstack:
@@ -295,7 +263,7 @@ struct MessageView: View {
             }
         }
     }
-
+    
     @ViewBuilder
     func recordingView(_ recording: Recording) -> some View {
         RecordWaveformWithButtons(
@@ -307,7 +275,7 @@ struct MessageView: View {
         .padding(.horizontal, MessageView.horizontalTextPadding)
         .padding(.top, 8)
     }
-
+    
     func messageTimeView(needsCapsule: Bool = false) -> some View {
         Group {
             if needsCapsule {
@@ -321,7 +289,7 @@ struct MessageView: View {
 }
 
 extension View {
-
+    
     @ViewBuilder
     func bubbleBackground(_ message: Message, theme: ChatTheme, isReply: Bool = false) -> some View {
         let radius: CGFloat = !message.attachments.isEmpty ? 12 : 20
@@ -344,10 +312,10 @@ extension View {
 struct MessageView_Preview: PreviewProvider {
     static let stan = User(id: "stan", name: "Stan", avatarURL: nil, isCurrentUser: false, avatarImageData: nil)
     static let john = User(id: "john", name: "John", avatarURL: nil, isCurrentUser: true, avatarImageData: nil)
-
+    
     static private var shortMessage = "Hi, buddy!"
     static private var longMessage = "Hello hello hello hello hello hello hello hello hello hello hello hello hello\n hello hello hello hello d d d d d d d d"
-
+    
     static private var replyedMessage = Message(
         id: UUID().uuidString,
         user: stan,
@@ -361,7 +329,7 @@ struct MessageView_Preview: PreviewProvider {
             Attachment.randomImage(),
         ]
     )
-
+    
     static private var message = Message(
         id: UUID().uuidString,
         user: stan,
@@ -369,11 +337,11 @@ struct MessageView_Preview: PreviewProvider {
         text: shortMessage,
         replyMessage: replyedMessage.toReplyMessage()
     )
-
+    
     static var previews: some View {
         ZStack {
             Color.yellow.ignoresSafeArea()
-
+            
             MessageView(
                 viewModel: ChatViewModel(),
                 message: replyedMessage,

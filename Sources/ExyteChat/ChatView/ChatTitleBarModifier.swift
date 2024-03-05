@@ -44,7 +44,6 @@ struct ChatTitleBarModifier: ViewModifier {
             
             ZStack(alignment: .bottomTrailing) {
                 
-                
                 if let data = self.avatarData {
                     
                     Image(uiImage: UIImage(data: data)!)
@@ -62,31 +61,6 @@ struct ChatTitleBarModifier: ViewModifier {
                             .background(theme.colors.grayStatus, in: Circle())
                     }
                 }
-                
-                
-                
-//                if let url = cover {
-//                    CachedAsyncImage(url: url, urlCache: .imageCache) { phase in
-//                        switch phase {
-//                        case .success(let image):
-//                            image
-//                                .resizable()
-//                                .scaledToFill()
-//                        default:
-//                            Rectangle().fill(theme.colors.grayStatus)
-//                        }
-//                    }
-//                    .frame(width: 35, height: 35)
-//                    .clipShape(Circle())
-//                } else {
-//                    let firstCharacter = title.first ?? "?"
-//                    VStack(alignment: .center) {
-//                        Text(String(firstCharacter))
-//                            .frame(width: 54, height: 54)
-//                            .foregroundColor(Color.black)
-//                            .background(theme.colors.grayStatus, in: Circle())
-//                    }
-//                }
                 
                 if #available(iOS 17.0, *){
                     
