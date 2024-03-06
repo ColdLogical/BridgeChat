@@ -187,24 +187,6 @@ struct MessageView: View {
         .sizeGetter($avatarViewSize)
     }
     
-    
-    @ViewBuilder
-    var avatarView2: some View {
-        Group {
-            if showAvatar {
-                AvatarView(url: message.user.avatarURL, avatarSize: avatarSize)
-                    .contentShape(Circle())
-                    .onTapGesture {
-                        tapAvatarClosure?(message.user, message.id)
-                    }
-            } else {
-                Color.clear.viewSize(avatarSize)
-            }
-        }
-        .padding(.horizontal, MessageView.horizontalAvatarPadding)
-        .sizeGetter($avatarViewSize)
-    }
-    
     @ViewBuilder
     func attachmentsView(_ message: Message) -> some View {
         AttachmentsGrid(attachments: message.attachments) {
