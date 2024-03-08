@@ -83,20 +83,7 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
 
             let prevSections = context.coordinator.sections
             let (appliedDeletes, appliedDeletesSwapsAndEdits, deleteOperations, swapOperations, editOperations, insertOperations) = operationsSplit(oldSections: prevSections, newSections: sections)
-
-            // step 1
-            // preapare intermediate sections and operations
-            //print("1 updateUIView sections:", "\n")
-            //print("whole previous:\n", formatSections(prevSections), "\n")
-            //print("whole appliedDeletes:\n", formatSections(appliedDeletes), "\n")
-            //print("whole appliedDeletesSwapsAndEdits:\n", formatSections(appliedDeletesSwapsAndEdits), "\n")
-            //print("whole final sections:\n", formatSections(sections), "\n")
-
-            //print("operations delete:\n", deleteOperations)
-            //print("operations swap:\n", swapOperations)
-            //print("operations edit:\n", editOperations)
-            //print("operations insert:\n", insertOperations)
-
+            
             DispatchQueue.main.async {
                 tableView.performBatchUpdates {
                     // step 2
