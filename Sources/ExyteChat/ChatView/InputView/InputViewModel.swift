@@ -69,7 +69,6 @@ final class InputViewModel: ObservableObject {
             // TODO: @cold: implement message time selection
             
             self.showDeleteTimerPopup = true
-//            showTimerAlert()
             break
         case .send:
             send()
@@ -103,14 +102,6 @@ final class InputViewModel: ObservableObject {
         }
     }
     
-    func showTimerAlert(){
-        
-//        self.showDeleteTimerPopup = true
-        
-//        viewmodel
-//        DeletePopup().showAndStack()
-    }
-
     func recordAudio() {
         if recorder.isRecording {
             return
