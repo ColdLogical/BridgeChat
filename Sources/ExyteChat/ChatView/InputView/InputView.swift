@@ -305,7 +305,8 @@ struct InputView: View {
                     Spacer()
                     
                     if let first = message.attachments.first {
-                        AsyncImageView(url: first.thumbnail)
+//                        AsyncImageView(url: first.thumbnail)
+                        AsyncImageView(attachment: first)
                             .viewSize(30)
                             .cornerRadius(4)
                             .padding(.trailing, 16)
