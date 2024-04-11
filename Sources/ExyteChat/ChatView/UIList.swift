@@ -363,7 +363,8 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
                     .rotationEffect(Angle(degrees: 180))
                     .onTapGesture { }
                     .onLongPressGesture {
-                        self.viewModel.messageMenuRow = row
+                        // As its not need now: "Remove reply on hold message"
+//                        self.viewModel.messageMenuRow = row
                     }
             }
             .minSize(width: 0, height: 0)
