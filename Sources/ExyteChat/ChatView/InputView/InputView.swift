@@ -67,7 +67,9 @@ public struct InputViewAttachments {
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
+    
     var sourceType: UIImagePickerController.SourceType = .camera
+    @Binding var isPresented: Bool
     @Binding var selectedImage: UIImage?
     @Binding var selectedVideoURL: URL?
     @Environment(\.presentationMode) private var presentationMode
@@ -76,14 +78,10 @@ struct ImagePicker: UIViewControllerRepresentable {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = false
         imagePicker.sourceType = sourceType
-        imagePicker.mediaTypes = ["public.image", "public.movie"] // Allow both photo and video
-        imagePicker.videoQuality = .typeHigh // Set video quality
+        imagePicker.mediaTypes = ["public.image", "public.movie"]
+        imagePicker.videoQuality = .typeHigh
         imagePicker.delegate = context.coordinator
-        
-        // For iOS 13+, to ensure full screen presentation
-        if #available(iOS 13.0, *) {
-            imagePicker.modalPresentationStyle = .fullScreen
-        }
+        imagePicker.modalPresentationStyle = .fullScreen
         
         return imagePicker
     }
@@ -96,23 +94,71 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        
         let parent: ImagePicker
         
         init(_ parent: ImagePicker) {
+            
             self.parent = parent
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            
             if let image = info[.originalImage] as? UIImage {
                 parent.selectedImage = image
+                
+                let url = self.storeSelectedImage(capturedImage: image)!
+                
+                print(url)
+                
+//                Media(source: any MediaModelProtocol)
+//                URLMediaModel(url: url)
+//                
+//                ExyteMediaPicker.Media(source:)
+//                
+//                let attachment = Attachment(id: UUID().uuidString, url: url, type: .image)
+//                
+//                DraftMessage(
+//                    text: attachment.text,
+//                    medias: attachment.medias,
+//                    recording: attachment.recording,
+//                    replyMessage: attachment.replyMessage,
+//                    createdAt: Date()
+//                )
+//                
+//                var attachment2 = InputViewAttachments()
+//                
+//                attachment2.text = ""
+//                attachment2.medias = attachment
+//                
+//                DraftMessage(text: attachment.id, medias: attachment., recording: <#T##Recording?#>, replyMessage: <#T##ReplyMessage?#>, createdAt: <#T##Date#>)
+                
+                
             } else if let videoURL = info[.mediaURL] as? URL {
                 parent.selectedVideoURL = videoURL
             }
-            parent.presentationMode.wrappedValue.dismiss()
+            
+            
+            
+            parent.isPresented = false
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.presentationMode.wrappedValue.dismiss()
+            
+            parent.isPresented = false
+        }
+        
+        func storeSelectedImage(capturedImage: UIImage) -> URL? {
+            
+            guard let data = capturedImage.jpegData(compressionQuality: 0.8) else { return nil}
+            
+            let tempPath = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+            
+            let id = UUID().uuidString
+            let path = tempPath.appendingPathComponent(id + ".jpg")
+            
+            try? data.write(to: path)
+            return path
         }
     }
 }
@@ -149,6 +195,8 @@ struct InputView: View {
     @State private var showCamera = false
     @State private var currentFullscreenMedia: Media?
     @State private var mediaPickerMode = MediaPickerMode.cameraSelection
+    @State private var showingImagePicker = false
+    @State private var image: UIImage?
     
     let tapDelay = 0.2
     
@@ -170,6 +218,9 @@ struct InputView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
+            .fullScreenCover(isPresented: $showingImagePicker, content: {
+                ImagePicker(isPresented: $showingImagePicker, selectedImage: $image, selectedVideoURL: $videoURL).edgesIgnoringSafeArea(.all)
+            })
         }
         .background(backgroundColor)
         .onAppear {
@@ -186,6 +237,7 @@ struct InputView: View {
             case .message:
                 messageTimeButton
                 cameraButton
+                cameraButton_new
             case .signature:
                 if viewModel.mediaPickerMode == .cameraSelection {
                     addButton
@@ -305,7 +357,7 @@ struct InputView: View {
                     Spacer()
                     
                     if let first = message.attachments.first {
-//                        AsyncImageView(url: first.thumbnail)
+                        
                         AsyncImageView(attachment: first)
                             .viewSize(30)
                             .cornerRadius(4)
@@ -360,7 +412,7 @@ struct InputView: View {
         }
     }
     
-    @State private var image: UIImage?
+    //    @State private var image: UIImage?
     @State private var videoURL: URL?
     @State private var showDeleteTimer: Bool = false
     
@@ -371,6 +423,19 @@ struct InputView: View {
         } label: {
             theme.images.inputView.attachCamera
                 .viewSize(24)
+                .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
+        }
+    }
+    
+    //UIKit native image picker
+    var cameraButton_new: some View {
+        
+        Button(action: {
+            showingImagePicker = true
+        }) {
+            theme.images.inputView.attachCamera
+                .resizable()
+                .frame(width: 24, height: 24)
                 .padding(EdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 12))
         }
     }

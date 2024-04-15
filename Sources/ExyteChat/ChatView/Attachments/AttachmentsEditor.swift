@@ -45,31 +45,6 @@ struct AttachmentsEditor<InputViewContent: View>: View {
         }
     }
     
-    var mediaPicker_new: some View {
-        GeometryReader { g in
-            
-            MediaPicker(
-                isPresented: $inputViewModel.showPicker,
-                onChange: {
-                    let selectedMedia = $0
-                    print(selectedMedia)
-                },
-                cameraViewBuilder: { cameraSheetView, cancelClosure, showPreviewClosure, takePhotoClosure, startVideoCaptureClosure, stopVideoCaptureClosure, toggleFlash, flipCamera in cameraSheetView
-                    
-                        .overlay(alignment: .bottom) {
-                            HStack {
-                                Button("Take photo") { takePhotoClosure() }
-                            }
-                            .padding(.bottom, 20)
-                        }
-                }
-            )
-            .showLiveCameraCell()
-            .mediaSelectionLimit(1)
-            .pickerMode($inputViewModel.mediaPickerMode)
-        }
-    }
-
     var mediaPicker: some View {
         GeometryReader { g in
             MediaPicker(isPresented: $inputViewModel.showPicker) {
