@@ -125,6 +125,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View>: View {
                         globalFocusState.focus = nil
                     }
                 } else {
+                    
                     InputView(
                         viewModel: inputViewModel,
                         inputFieldId: inputFieldId,

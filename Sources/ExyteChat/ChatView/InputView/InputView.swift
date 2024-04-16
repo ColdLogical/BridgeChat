@@ -72,6 +72,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
     @Binding var selectedImage: UIImage?
     @Binding var selectedVideoURL: URL?
+    var inputViewModel: InputViewModel
     @Environment(\.presentationMode) private var presentationMode
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
@@ -111,34 +112,22 @@ struct ImagePicker: UIViewControllerRepresentable {
                 
                 print(url)
                 
-//                Media(source: any MediaModelProtocol)
-//                URLMediaModel(url: url)
-//                
-//                ExyteMediaPicker.Media(source:)
-//                
-//                let attachment = Attachment(id: UUID().uuidString, url: url, type: .image)
-//                
-//                DraftMessage(
-//                    text: attachment.text,
-//                    medias: attachment.medias,
-//                    recording: attachment.recording,
-//                    replyMessage: attachment.replyMessage,
-//                    createdAt: Date()
-//                )
-//                
-//                var attachment2 = InputViewAttachments()
-//                
-//                attachment2.text = ""
-//                attachment2.medias = attachment
-//                
-//                DraftMessage(text: attachment.id, medias: attachment., recording: <#T##Recording?#>, replyMessage: <#T##ReplyMessage?#>, createdAt: <#T##Date#>)
+                let inputViewModel = self.parent.inputViewModel
                 
+                inputViewModel.attachments.medias = [Media(source: URLMediaModel(url: url))]
+                inputViewModel.state = .hasTextOrMedia
+                inputViewModel.send()
                 
             } else if let videoURL = info[.mediaURL] as? URL {
+                
                 parent.selectedVideoURL = videoURL
+                
+                let inputViewModel = self.parent.inputViewModel
+                
+                inputViewModel.attachments.medias = [Media(source: URLMediaModel(url: videoURL))]
+                inputViewModel.state = .hasTextOrMedia
+                inputViewModel.send()
             }
-            
-            
             
             parent.isPresented = false
         }
@@ -219,7 +208,7 @@ struct InputView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .fullScreenCover(isPresented: $showingImagePicker, content: {
-                ImagePicker(isPresented: $showingImagePicker, selectedImage: $image, selectedVideoURL: $videoURL).edgesIgnoringSafeArea(.all)
+                ImagePicker(isPresented: $showingImagePicker, selectedImage: $image, selectedVideoURL: $videoURL, inputViewModel: self.viewModel).edgesIgnoringSafeArea(.all)
             })
         }
         .background(backgroundColor)
@@ -431,7 +420,11 @@ struct InputView: View {
     var cameraButton_new: some View {
         
         Button(action: {
+            
             showingImagePicker = true
+//            viewModel.mediaPickerMode = .camera
+//            viewModel.showPicker = true
+            
         }) {
             theme.images.inputView.attachCamera
                 .resizable()
