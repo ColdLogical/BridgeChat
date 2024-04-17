@@ -66,6 +66,11 @@ public struct InputViewAttachments {
     public var replyMessage: ReplyMessage?
 }
 
+public extension Notification.Name {
+    static let showProcessing = Notification.Name("showProcessing")
+    static let hideProcessing = Notification.Name("hideProcessing")
+}
+
 struct ImagePicker: UIViewControllerRepresentable {
     
     var sourceType: UIImagePickerController.SourceType = .camera
@@ -106,6 +111,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             
             if let image = info[.originalImage] as? UIImage {
+                
                 parent.selectedImage = image
                 
                 let url = self.storeSelectedImage(capturedImage: image)!
@@ -118,6 +124,8 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
                 
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": url.lastPathComponent])
+                
             } else if let videoURL = info[.mediaURL] as? URL {
                 
                 parent.selectedVideoURL = videoURL
@@ -127,6 +135,8 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.attachments.medias = [Media(source: URLMediaModel(url: videoURL))]
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
+                
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": videoURL.lastPathComponent])
             }
             
             parent.isPresented = false
@@ -225,7 +235,7 @@ struct InputView: View {
             switch style {
             case .message:
                 messageTimeButton
-                cameraButton
+//                cameraButton
                 cameraButton_new
             case .signature:
                 if viewModel.mediaPickerMode == .cameraSelection {
