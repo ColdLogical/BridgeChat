@@ -8,6 +8,7 @@ struct AttachmentsPage: View {
 
     @EnvironmentObject var mediaPagesViewModel: FullscreenMediaPagesViewModel
     @Environment(\.chatTheme) private var theme
+    @GestureState private var scale: CGFloat = 1.0
 
     let attachment: Attachment
 
@@ -19,6 +20,10 @@ struct AttachmentsPage: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .scaleEffect(scale)
+                        .gesture(MagnificationGesture().updating($scale) { (newValue, scale, _) in
+                          scale = newValue
+                        })
                 default:
                     ActivityIndicator()
                 }

@@ -35,7 +35,6 @@ struct FullscreenMediaPages: View {
                         AttachmentsPage(attachment: attachment)
                             .tag(index)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .allowsHitTesting(false)
                             .ignoresSafeArea()
                     }
                     .ignoresSafeArea()
