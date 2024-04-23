@@ -44,11 +44,11 @@ struct FullscreenMediaPages: View {
             }
             .offset(viewModel.offset)
             .gesture(closeGesture)
-            .onTapGesture {
-                withAnimation {
-                    viewModel.showMinis.toggle()
-                }
-            }
+//            .onTapGesture {
+//                withAnimation {
+//                    viewModel.showMinis.toggle()
+//                }
+//            }
 
             VStack {
                 Spacer()
@@ -90,7 +90,7 @@ struct FullscreenMediaPages: View {
                 }
                 .offset(y: -safeAreaInsets.bottom)
             }
-            .offset(viewModel.offset)
+//            .offset(viewModel.offset)
         }
         .ignoresSafeArea()
         .overlay(alignment: .top) {
