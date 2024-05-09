@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ExyteMediaPicker
+import KeychainAccess
 
 public enum InputViewStyle {
     case message
@@ -124,7 +125,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
                 
-                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": url.lastPathComponent])
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": "image.jpg"])
                 
             } else if let videoURL = info[.mediaURL] as? URL {
                 
@@ -136,7 +137,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
                 
-                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": videoURL.lastPathComponent])
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": "video.mp4"])
             }
             
             parent.isPresented = false
@@ -151,12 +152,16 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             guard let data = capturedImage.jpegData(compressionQuality: 0.8) else { return nil}
             
+            let keychain = Keychain(service: "me.proton.Bridge.mobile")
+            
+            keychain[data: "imageToUpload"] = data
+            
             let tempPath = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             
             let id = UUID().uuidString
             let path = tempPath.appendingPathComponent(id + ".jpg")
             
-            try? data.write(to: path)
+//            try? data.write(to: path)
             return path
         }
     }
@@ -218,7 +223,9 @@ struct InputView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .fullScreenCover(isPresented: $showingImagePicker, content: {
-                ImagePicker(isPresented: $showingImagePicker, selectedImage: $image, selectedVideoURL: $videoURL, inputViewModel: self.viewModel).edgesIgnoringSafeArea(.all)
+                
+                ImagePicker(isPresented: $showingImagePicker, selectedImage: $image, selectedVideoURL: $videoURL, inputViewModel: self.viewModel)
+                    .edgesIgnoringSafeArea(.all)
             })
         }
         .background(backgroundColor)

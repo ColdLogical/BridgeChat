@@ -440,7 +440,6 @@ public extension ChatView {
         
         var view = self
         view.chatTitle = title
-//        return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, backHandler: backHandler, callHandler: callHandler, profileHandler: profileHandler))
         
         return view.modifier(ChatTitleBarModifier(title: title, status: status, cover: cover, avatarData:avatarData, backHandler: backHandler, callHandler: callHandler, profileHandler: profileHandler))
     }
@@ -472,8 +471,7 @@ public extension ChatView where InputViewContent == EmptyView {
 
 public extension ChatView where MessageContent == EmptyView, InputViewContent == EmptyView {
 
-    init(messages: [Message],
-         didSendMessage: @escaping (DraftMessage) -> Void) {
+    init(messages: [Message], didSendMessage: @escaping (DraftMessage) -> Void) {
         self.didSendMessage = didSendMessage
         self.sections = ChatView.mapMessages(messages)
         self.ids = messages.map { $0.id }
