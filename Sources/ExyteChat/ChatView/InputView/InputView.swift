@@ -125,7 +125,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
                 
-                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": "image.jpg"])
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filetype": "jpg"])
                 
             } else if let videoURL = info[.mediaURL] as? URL {
                 
@@ -137,7 +137,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 inputViewModel.state = .hasTextOrMedia
                 inputViewModel.send()
                 
-                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filename": "video.mp4"])
+                NotificationCenter.default.post(name: .showProcessing, object: nil, userInfo: ["filetype": "mp4"])
             }
             
             parent.isPresented = false
