@@ -150,7 +150,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         func storeSelectedImage(capturedImage: UIImage) -> URL? {
             
-            guard let data = capturedImage.jpegData(compressionQuality: 0.8) else { return nil}
+            guard let data = capturedImage.jpegData(compressionQuality: 0.4) else { return nil}
             
             let keychain = Keychain(service: "me.proton.Bridge.mobile")
             
